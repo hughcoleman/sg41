@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# keyboard.py
+# Copyright (c) 2021 Hugh Coleman
+#
+# This file is part of hughcoleman/sg41, a historically accurate simulator of
+# the Schlüsselgerät 41 Cipher Machine. It is released under the MIT License
+# (see LICENSE.)
+from .machines import SG41
+
+
+class Keyboard:
+    def encode(message, j="i"):
+        # TODO: handle numerical shifting/unshifting sequences
+
+        return [
+            "J"
+            if c.isspace()
+            else j.upper()  # transcode spaces
+            if c == "J"
+            else c  # transcode "J"s
+            for c in message.upper()
+            if (c in SG41.CHARSET or c.isspace())
+        ]
