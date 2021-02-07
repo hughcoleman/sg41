@@ -17,30 +17,14 @@ class SG41:
     CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     WHEEL_SIZES = [25, 25, 23, 23, 24, 24]
-    PRINT_IN = "PAKRHFIDZQNXMTBWJVGSOCLYUE"
-    PRINT_OUT = "FHRKAPEUYLCOSGVJWBTMXNQZDI"
+    PRINT_INNER = "PAKRHFIDZQNXMTBWJVGSOCLYUE"
+    PRINT_OUTER = "FHRKAPEUYLCOSGVJWBTMXNQZDI"
 
     def feed(self, stream, direction=1):
+        """ Feed the machine with a given input. """
+
         output = ""
         for character in stream:
-            # Kopacz & Reuvers' paper is a bit ambiguous when it comes to the
-            # order of events.
-            #
-            #  - Table 4 (p. 16) suggests that the adder senses and latches the
-            #    pins at six o'clock, before the crank is rotated.
-            #
-            #  - Yet, it is also claimed that "two of the stepping phases are
-            #    carried out before the encryption of a letter. The other two
-            #    stepping phases are carried out after the encryption of a
-            #    letter" (p. 15)
-            #
-            #  - However, it is also claimed that the "stepping of the wheels
-            #    at Phase I, Phase II and Phase III, takes place before the PRN
-            #    is generated ... Phase IV takes place after the letter has
-            #    been encrypted" (p. 17)
-            #
-            # So which one is it?
-
             senses = [self.wheels[i].peek(-5) for i in range(6)]
 
             # Phase I: If w6 = 1, then each of the wheels 1 to 5 where the pin
@@ -55,8 +39,8 @@ class SG41:
                 for i in range(6):
                     self.wheels[i].step()
 
-            # Phase Cipher: Generate the pseudorandom number, and
-            #               encrypt/decrypt the stream.
+            # Cipher: Generate the pseudorandom number, and encrypt/decrypt the
+            #         stream.
             inv = self.wheels[5].peek(8)
             prn = (
                 (inv ^ self.wheels[0].peek(8)) * 1
@@ -68,8 +52,8 @@ class SG41:
 
             output = (
                 output
-                + SG41.PRINT_OUT[
-                    (SG41.PRINT_IN.index(character) + direction * prn) % 26
+                + SG41.PRINT_OUTER[
+                    (SG41.PRINT_INNER.index(character) + direction * prn) % 26
                 ]
             )
 
