@@ -14,11 +14,10 @@ class Keyboard:
         # TODO: handle numerical shifting/unshifting sequences
 
         return [
-            "J"
-            if c.isspace()
-            else j.upper()  # transcode spaces
-            if c == "J"
-            else c  # transcode "J"s
+            "J"         if c.isspace()  else    # encode spaces
+            j.upper()   if c == "j"     else    # encode "J"s
+            c.upper()
+            
             for c in message.upper()
             if (c in SG41.CHARSET or c.isspace())
         ]
