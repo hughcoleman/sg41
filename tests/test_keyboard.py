@@ -13,7 +13,19 @@ from sg41.keyboard import Keyboard
 
 class TestKeyboard(unittest.TestCase):
     def test__encode(self):
-        pass
+        self.assertEqual(
+            "SCHLUSSELGERATJFORTYONE",
+            "".join(Keyboard.encode("Schlusselgerat Forty-One")),
+        )
+
+        self.assertEqual(
+            "IOLLYJIACKJANDJIOYFULJIILLJIUMPINGJDOWNJTHEJIAGGEDJHILL",
+            "".join(
+                Keyboard.encode(
+                    "Jolly Jack and joyful Jill, jumping down the jagged hill."
+                )
+            ),
+        )
 
     def test__decode(self):
         pass
