@@ -21,10 +21,18 @@ class Wheel:
         if pins is None:
             pins = [0] * size
 
+        if (type(pins) is not list) or any(
+            pin not in [0, 1, False, True] for pin in pins
+        ):
+            raise ValueError("pins must be a list of boolean-y values")
+
         if position >= len(pins) or position < 0:
             raise ValueError(
                 "cannot set position to {}, too big".format(position)
             )
+
+        # map pins to a list of integers (0/1)
+        pins = [int(pin) for pin in pins]
 
         # TODO: set position based on letter/number
 

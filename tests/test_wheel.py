@@ -12,6 +12,7 @@ from sg41.wheel import Wheel
 
 import random
 
+
 class TestWheel(unittest.TestCase):
     def test__constructor(self):
         w1 = Wheel(size=25)
@@ -31,6 +32,11 @@ class TestWheel(unittest.TestCase):
         self.assertRaises(ValueError, Wheel, size=24, position=-1)
         self.assertRaises(ValueError, Wheel, size=24, position=24)
         self.assertRaises(ValueError, Wheel, size=24, position=100)
+
+        self.assertRaises(ValueError, Wheel, pins=[0, 0, 1, 8, 1])
+        self.assertRaises(ValueError, Wheel, pins=[1, "a", 0])
+        self.assertRaises(ValueError, Wheel, pins=13)
+        self.assertRaises(ValueError, Wheel, pins="z")
 
     def test__step(self):
         # randomly generate the positions of the pins
