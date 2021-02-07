@@ -30,7 +30,7 @@ There are several explanations as to when this happens, but all differ.
 
 ###### References
 
-* Kopacz, K., & Reuvers, P. (2021). *Schlüsselgerät 41*. [https://www.cryptomuseum.com/pub/files/CM_SG41.pdf](https://www.cryptomuseum.com/pub/files/CM_SG41.pdf)
+* Kopacz, K., & Reuvers, P. (2021). *Schlüsselgerät 41: Full technical details of the German wartime SG-41 cipher machine.* Crypto Museum, Eindhoven (Netherlands). [https://www.cryptomuseum.com/pub/files/CM_SG41.pdf](https://www.cryptomuseum.com/pub/files/CM_SG41.pdf)
 
 ###### License
 
