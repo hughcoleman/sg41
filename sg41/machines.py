@@ -20,7 +20,7 @@ class SG41:
     PRINT_INNER = "PAKRHFIDZQNXMTBWJVGSOCLYUE"
     PRINT_OUTER = "FHRKAPEUYLCOSGVJWBTMXNQZDI"
 
-    def feed(self, stream, direction=1):
+    def feed(self, stream):
         """ Feed the machine with a given input. """
 
         output = ""
@@ -53,7 +53,7 @@ class SG41:
             output = (
                 output
                 + SG41.PRINT_OUTER[
-                    (SG41.PRINT_INNER.index(character) + direction * prn) % 26
+                    (SG41.PRINT_INNER.index(character) + prn) % 26
                 ]
             )
 
@@ -72,16 +72,20 @@ class SG41:
         return output
 
     def encrypt(self, plaintext):
+        """ Encrypt a plaintext message. """
+
         if any(c not in SG41.CHARSET for c in plaintext):
             raise ValueError("illegal character in plaintext stream")
 
-        return self.feed(plaintext, 1)
+        return self.feed(plaintext)
 
     def decrypt(self, ciphertext):
+        """ Decrypt a ciphertext message. """
+
         if any(c not in SG41.CHARSET for c in ciphertext):
             raise ValueError("illegal character in ciphertext stream")
 
-        return self.feed(ciphertext, -1)
+        return self.feed(ciphertext)
 
     def __init__(self, internal, external):
         # validate internal key

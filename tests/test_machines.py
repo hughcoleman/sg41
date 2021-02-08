@@ -11,32 +11,40 @@ import unittest
 from sg41.machines import SG41
 from sg41.machines import SG41Z
 
-import random
+# Grundstellung
+
+PINS = [
+    [0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1],
+    [0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0],
+    [1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0],
+    [0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0]
+]
+
+POSITIONS = [0, 1, 2, 3, 0, 0]
 
 
 class TestSG41(unittest.TestCase):
     def test__encrypt(self):
-        pins = [
-            [random.randint(0, 1) for pin in range(size)]
-            for size in SG41.WHEEL_SIZES
-        ]
-        positions = [random.randint(0, size - 1) for size in SG41.WHEEL_SIZES]
+        machine = SG41(PINS, POSITIONS)
 
-        machine = SG41(pins, positions)
-
-        print("\n\n" + "=" * 80)
-        print('Encrypting "WETTERREPORT" using the following settings.\n')
-        print("pins      =", pins)
-        print("positions = ", positions, "\n")
-        print(
-            "Computed ciphertext",
-            machine.encrypt("WETTERREPORT") + ".",
-            "Is this correct?",
+        # test the .encrypt() method using the sample plaintext/ciphertext pair
+        # provided in Kopacz and Reuvers' paper
+        self.assertEqual(
+            "IHEPLRETQSDSNDCWHPIVVGLYMHOWSJQS",
+            machine.encrypt("SCHLUESSELGERAETVIEREINSWANDERER"),
         )
-        print("=" * 80 + "\n\n")
 
     def test__decrypt(self):
-        pass
+        machine = SG41(PINS, POSITIONS)
+
+        # test the .decrypt() method using the sample plaintext/ciphertext pair
+        # provided in Kopacz and Reuvers' paper
+        self.assertEqual(
+            "SCHLUESSELGERAETVIEREINSWANDERER",
+            machine.decrypt("IHEPLRETQSDSNDCWHPIVVGLYMHOWSJQS"),
+        )
 
 
 class TestSG41Z(unittest.TestCase):
