@@ -8,7 +8,34 @@ The Schlüsselgerät 41 was a mechanical cipher machine developed by Wanderer We
 
 ###### Usage
 
-N/A
+Import the `SG41` class from the `sg41.machines` module, and pass the positions of the 144 cams and six rotors to its constructor.
+
+To perform an encryption or decryption operation, pass the relevant plaintext or ciphertext to the `.encrypt()` or `.decrypt()` methods, respectively. When encrypting, consider using `sg41.keyboard.Keyboard` to encode the plaintext into a compatible format.
+
+```python
+from sg41.machines import SG41
+
+PINS = [
+    [0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1],
+    [0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0],
+    [1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0],
+    [0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0]
+]
+
+POSITIONS = [0, 1, 2, 3, 0, 0]
+
+machine = SG41(PINS, POSITIONS)
+
+print(
+    machine.encrypt("SCHLUESSELGERAETVIEREINSWANDERER")
+)
+
+# IHEPLQEDMYPWMQDXWDKCVGLYMHOWSJQS
+```
+
+This example has been designed to match the example provided in the *Simulation* section of Kopacz & Reuvers' paper.
 
 ###### References
 
