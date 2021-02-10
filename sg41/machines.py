@@ -14,40 +14,49 @@ class SG41:
     Machine.
     """
 
+    # the SZ-41 was only capable of handling the 26 letters of the Latin
+    # alphabet
     CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     WHEEL_SIZES = [25, 25, 23, 23, 24, 24]
+
     PRINT_INNER = "PAKRHFIDZQNXMTBWJVGSOCLYUE"
     PRINT_OUTER = "FHRKAPEUYLCOSGVJWBTMXNQZDI"
 
-    def feed(self, stream):
+    def __process(self, stream):
         """ Feed the machine with a given input. """
 
         output = ""
         for character in stream:
-            senses = [self.wheels[i].peek(-5) for i in range(6)]
+            # peek at and latch the state of the pins five below the window
+            senses = {
+                wheel: self.wheels[wheel].peek(-5)
+                        for wheel in [1, 2, 3, 4, 5, 6]
+            }
 
-            # Phase I: If w6 = 1, then each of the wheels 1 to 5 where the pin
-            #          is active causes the wheel to its right to step.
-            if senses[5]:
-                for i in range(5):
-                    if senses[i]:
-                        self.wheels[i + 1].step()
+            # Phase I:
+            # If Wheel 6 is active, then for each Wheel 1 to 5, if it is
+            # active, then we step the wheel immediately to its right.
+            if senses[6]:
+                for wheel in [1, 2, 3, 4, 5]:
+                    if senses[wheel]:
+                        self.wheels[wheel + 1].step()
 
-            # Phase II: If w6 = 1, then all wheels step.
-            if senses[5]:
-                for i in range(6):
-                    self.wheels[i].step()
+            # Phase II:
+            # If Wheel 6 was active before Phase I, then all wheels step once.
+            if senses[6]:
+                for wheel in [1, 2, 3, 4, 5, 6]:
+                    self.wheels[wheel].step()
 
-            # Cipher: Generate the pseudorandom number, and encrypt/decrypt the
-            #         stream.
-            inv = self.wheels[5].peek(8)
+            # Generate the pseudorandom number using the pins eight above the
+            # window, and encrypt/decrypt the currently pressed character.
+            inv = self.wheels[6].peek(8)
             prn = (
-                (inv ^ self.wheels[0].peek(8)) * 1
-                + (inv ^ self.wheels[1].peek(8)) * 2
-                + (inv ^ self.wheels[2].peek(8)) * 4
-                + (inv ^ self.wheels[3].peek(8)) * 8
-                + (inv ^ self.wheels[4].peek(8)) * 10
+                (inv ^ self.wheels[1].peek(8)) * 1 +
+                (inv ^ self.wheels[2].peek(8)) * 2 +
+                (inv ^ self.wheels[3].peek(8)) * 4 +
+                (inv ^ self.wheels[4].peek(8)) * 8 +
+                (inv ^ self.wheels[5].peek(8)) * 10
             )
 
             output = (
@@ -57,17 +66,21 @@ class SG41:
                 ]
             )
 
-            # Phase III: Re-sense at position -5, and then each wheel 1 to 5
-            #            where the pin is active causes the wheel to its right
-            #            to step..
-            senses = [self.wheels[i].peek(-5) for i in range(6)]
-            for i in range(5):
-                if senses[i]:
-                    self.wheels[i + 1].step()
+            # Phase III:
+            # Re-sense the pins five below the window, and then for each Wheel
+            # 1 to 5 that is active, step the wheel immediately to its right.
+            senses = {
+                wheel: self.wheels[wheel].peek(-5)
+                        for wheel in [1, 2, 3, 4, 5, 6]
+            }
+            for wheel in [1, 2, 3, 4, 5]:
+                if senses[wheel]:
+                    self.wheels[wheel + 1].step()
 
-            # Phase IV: All wheels step.
-            for i in range(6):
-                self.wheels[i].step()
+            # Phase IV:
+            # All wheels step.
+            for wheel in [1, 2, 3, 4, 5, 6]:
+                self.wheels[wheel].step()
 
         return output
 
@@ -75,54 +88,60 @@ class SG41:
         """ Encrypt a plaintext message. """
 
         if any(c not in SG41.CHARSET for c in plaintext):
-            raise ValueError("illegal character in plaintext stream")
+            raise ValueError("illegal character in plaintext stream.")
 
-        return self.feed(plaintext)
+        return self.__process(plaintext)
 
     def decrypt(self, ciphertext):
         """ Decrypt a ciphertext message. """
 
         if any(c not in SG41.CHARSET for c in ciphertext):
-            raise ValueError("illegal character in ciphertext stream")
+            raise ValueError("illegal character in ciphertext stream.")
 
-        return self.feed(ciphertext)
+        return self.__process(ciphertext)
 
     def __init__(self, internal, external):
-        # validate internal key
+        # validate the "internal" key (cam positions)
         if type(internal) is not list or len(internal) != 6:
-            raise ValueError("internal key must be a list of pin positions")
+            raise ValueError(
+                "the internal key must be a list of lists of pin positions."
+            )
 
-        for i in range(6):
+        for wheel in range(6):
             if (
-                type(internal[i]) is not list
-                or len(internal[i]) != SG41.WHEEL_SIZES[i]
+                type(internal[wheel]) is not list
+                or len(internal[wheel]) != SG41.WHEEL_SIZES[wheel]
             ):
                 raise ValueError(
-                    "wheel #{} must have {} pins".format(
-                        i + 1, SG41.WHEEL_SIZES[i]
+                    "wheel {} contains {} pins, but you specified {}.".format(
+                        wheel + 1,
+                        SG41.WHEEL_SIZES[wheel],
+                        len(internal[wheel]),
                     )
                 )
 
-        # validate external key
+        # validate the "external" key (initial rotor positions)
         if type(external) is not list or len(external) != 6:
-            raise ValueError("external key must be a list of positions")
+            raise ValueError(
+                "the external key must be a list of positions to set rotors."
+            )
 
-        for i in range(6):
+        for wheel in range(6):
             if (
-                type(external[i]) is not int
-                or external[i] < 0
-                or external[i] >= SG41.WHEEL_SIZES[i]
+                type(external[wheel]) is not int
+                or external[wheel] < 0
+                or external[wheel] >= SG41.WHEEL_SIZES[wheel]
             ):
                 raise ValueError(
-                    "wheel #{} cannot be set to position {}".format(
-                        i + 1, external[i]
+                    "wheel {} cannot be set to position {}.".format(
+                        wheel + 1, external[wheel]
                     )
                 )
 
-        self.wheels = [
-            Wheel(pins=pins, position=position)
-            for pins, position in zip(internal, external)
-        ]
+        self.wheels = {
+            (wheel + 1): Wheel(pins=pins, position=position)
+            for wheel, (pins, position) in enumerate(zip(internal, external))
+        }
 
 
 class SG41Z:
