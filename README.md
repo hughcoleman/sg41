@@ -37,6 +37,12 @@ print(
 
 This example has been designed to match the example provided in the *Simulation* section of Kopacz & Reuvers' paper.
 
+###### Cryptanalysis
+
+A naive wheel-setting algorithm is implemented in [`cryptanalysis.cpp`](https://github.com/hughcoleman/sg41/blob/main/cryptanalysis.cpp).
+
+It employs the use of some questionable search-space reduction algorithms, so, if it produces unexpected results, please do let me know! Define the preprocessor macro `DISABLE_OPTIMIZED` at compile-time to disable the optimizations.
+
 ###### References
 
 * Kopacz, K., & Reuvers, P. (2021). *Schlüsselgerät 41: Full technical details of the German wartime SG-41 cipher machine.* Crypto Museum, Eindhoven (Netherlands). [https://www.cryptomuseum.com/pub/files/CM_SG41.pdf](https://www.cryptomuseum.com/pub/files/CM_SG41.pdf)
