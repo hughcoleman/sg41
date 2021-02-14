@@ -12,6 +12,16 @@
 
 using namespace std;
 
+const string R1_LABEL   = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+const string R5_LABEL[] = {
+    "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12",
+    "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"
+};
+const string R6_LABEL[] = {
+    "00", "02", "05", "07", "10", "12", "15", "17", "20", "22", "25", "27",
+    "30", "32", "35", "37", "40", "42", "45", "47", "50", "52", "55", "57"
+};
+
 struct Rotor {
     // configuration
     int size = 0;
@@ -46,6 +56,7 @@ void wheelset(Rotor rotors[6], vector<int> stream) {
     // On an i5-7400, in the worst case, takes about a minute. On average,
     // though, this takes less than a second.
 
+#if !defined(DISABLE_OPTIMIZATIONS)
     bool f1 = (
         stream[0] ==  0 || stream[0] ==  3 || stream[0] ==  4 ||
         stream[0] ==  7 || stream[0] ==  8 || stream[0] == 17 ||
@@ -59,14 +70,11 @@ void wheelset(Rotor rotors[6], vector<int> stream) {
         stream[0] == 19 || stream[0] == 20 || stream[0] == 23 ||
         stream[0] == 24
     );
-
-#if defined(DISABLE_OPTIMIZATIONS)
-    f1 = false;
-    f2 = false;
 #endif
 
     for (int r1 = 0; r1 < 25; r1++) {
     for (int r2 = 0; r2 < 25; r2++) {
+#if !defined(DISABLE_OPTIMIZATIONS)
         // We can reduce the search space, by eliminating partial
         // configurations as early as possible.
 
@@ -111,7 +119,7 @@ void wheelset(Rotor rotors[6], vector<int> stream) {
         )) {
             continue;
         }
-
+#endif
     for (int r3 = 0; r3 < 23; r3++) {
     for (int r4 = 0; r4 < 23; r4++) {
     for (int r5 = 0; r5 < 24; r5++) {
@@ -155,8 +163,12 @@ void wheelset(Rotor rotors[6], vector<int> stream) {
             }
         }
 
-        cout << r1 << " " << r2 << " " << r3 << " "
-             << r4 << " " << r5 << " " << r6 << endl;
+        cout << R1_LABEL[r1] << " "
+             << R1_LABEL[r2] << " "
+             << R1_LABEL[r3] << " "
+             << R1_LABEL[r4] << " "
+             << R5_LABEL[r5] << " "
+             << R6_LABEL[r6] << endl;
 
         invalid:
         ;

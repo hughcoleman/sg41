@@ -41,7 +41,7 @@ This example has been designed to match the example provided in the *Simulation*
 
 A naive wheel-setting algorithm is implemented in [`cryptanalysis.cpp`](https://github.com/hughcoleman/sg41/blob/main/cryptanalysis.cpp).
 
-It employs the use of some questionable search-space reduction algorithms, so, if it produces unexpected results, please do let me know! Define the preprocessor macro `DISABLE_OPTIMIZED` at compile-time to disable the optimizations.
+It employs the use of some questionable search-space reduction algorithms, so, if it produces unexpected results, please do let me know! Define the preprocessor macro `DISABLE_OPTIMIZATIONS` at compile-time to disable the optimizations.
 
 ###### References
 
