@@ -60,6 +60,11 @@ void wheelset(Rotor rotors[6], vector<int> stream) {
         stream[0] == 24
     );
 
+#if defined(DISABLE_OPTIMIZATIONS)
+    f1 = false;
+    f2 = false;
+#endif
+
     for (int r1 = 0; r1 < 25; r1++) {
     for (int r2 = 0; r2 < 25; r2++) {
         // We can reduce the search space, by eliminating partial
