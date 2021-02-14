@@ -28,24 +28,16 @@ class SG41:
 
         output = ""
         for character in stream:
-            # peek at and latch the state of the pins five below the window
-            senses = {
-                wheel: self.wheels[wheel].peek(-5)
-                        for wheel in [1, 2, 3, 4, 5, 6]
-            }
-
             # Phase I:
             # If Wheel 6 is active, then for each Wheel 1 to 5, if it is
             # active, then we step the wheel immediately to its right.
-            if senses[6]:
-                for wheel in [1, 2, 3, 4, 5]:
-                    if senses[wheel]:
-                        self.wheels[wheel + 1].step()
-
+            #
             # Phase II:
             # If Wheel 6 was active before Phase I, then all wheels step once.
-            if senses[6]:
-                for wheel in [1, 2, 3, 4, 5, 6]:
+            if self.wheels[6].peek(-5):
+                for wheel in [6, 5, 4, 3, 2, 1]:
+                    if wheel > 1 and self.wheels[wheel - 1].peek(-5):
+                        self.wheels[wheel].step()
                     self.wheels[wheel].step()
 
             # Generate the pseudorandom number using the pins eight above the
@@ -60,8 +52,7 @@ class SG41:
             )
 
             output = (
-                output
-                + SG41.PRINT_OUTER[
+                output + SG41.PRINT_OUTER[
                     (SG41.PRINT_INNER.index(character) + prn) % 26
                 ]
             )
@@ -69,17 +60,12 @@ class SG41:
             # Phase III:
             # Re-sense the pins five below the window, and then for each Wheel
             # 1 to 5 that is active, step the wheel immediately to its right.
-            senses = {
-                wheel: self.wheels[wheel].peek(-5)
-                        for wheel in [1, 2, 3, 4, 5, 6]
-            }
-            for wheel in [1, 2, 3, 4, 5]:
-                if senses[wheel]:
-                    self.wheels[wheel + 1].step()
-
+            # 
             # Phase IV:
             # All wheels step.
-            for wheel in [1, 2, 3, 4, 5, 6]:
+            for wheel in [6, 5, 4, 3, 2, 1]:
+                if wheel > 1 and self.wheels[wheel - 1].peek(-5):
+                    self.wheels[wheel].step()
                 self.wheels[wheel].step()
 
         return output
