@@ -27,15 +27,48 @@ PINS = [
 POSITIONS = [0, 1, 2, 3, 0, 0]
 
 machine = SG41(PINS, POSITIONS)
-
 print(
     machine.encrypt("SCHLUESSELGERAETVIEREINSWANDERER")
-)
-
-# IHEPLQEDMYPWMQDXWDKCVGLYMHOWSJQS
+)  # IHEPLQEDMYPWMQDXWDKCVGLYMHOWSJQS
 ```
 
 This example has been designed to match the example provided in the *Simulation* section of Kopacz & Reuvers' paper.
+
+If encrypting messages containing other characters, use the static `Keyboard.encode` method to preprocess your plaintext.
+
+```python
+from sg41.machines import SG41
+from sg41.keyboard import Keyboard
+
+PINS = [
+    [0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1],
+    [0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0],
+    [1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0],
+    [0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0]
+]
+
+POSITIONS = [0, 1, 2, 3, 0, 0]
+
+machine = SG41(PINS, POSITIONS)
+print(
+    machine.encrypt(
+        Keyboard.encode(
+            "As flies to wanton boys are we to the gods; They kill us for their sport."
+        )
+    )
+)  # UITVULSTGKFKUDNWALWILATPPKFIROGQGADNFWPDLBHDTGLXQZUORNQAQHLTOZLSFOCBXMJ
+
+machine = SG41(PINS, POSITIONS)
+print(
+    machine.decrypt(
+        "UITVULSTGKFKUDNWALWILATPPKFIROGQGADNFWPDLBHDTGLXQZUORNQAQHLTOZLSFOCBXMJ"
+    ).replace(
+        "J", " "
+    )  # naive decode
+)  # AS FLIES TO WANTON BOYS ARE WE TO THE GODS THEY KILL US FOR THEIR SPORT
+```
 
 ###### Cryptanalysis
 
