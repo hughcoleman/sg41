@@ -58,7 +58,7 @@ print(
             "As flies to wanton boys are we to the gods; They kill us for their sport."
         )
     )
-)  # UITVULSTGKFKUDNWALWILATPPKFIROGQGADNFWPDLBHDTGLXQZUORNQAQHLTOZLSFOCBXMJ
+)  # "UITVULSTGKFKUDNWALWILATPPKFIROGQGADNFWPDLBHDTGLXQZUORNQAQHLTOZLSFOCBXMJ"
 
 machine = SG41(PINS, POSITIONS)
 print(
@@ -67,7 +67,20 @@ print(
             "UITVULSTGKFKUDNWALWILATPPKFIROGQGADNFWPDLBHDTGLXQZUORNQAQHLTOZLSFOCBXMJ"
         )
     )
-)  # AS FLIES TO WANTON BOYS ARE WE TO THE GODS THEY KILL US FOR THEIR SPORT
+)  # "AS FLIES TO WANTON BOYS ARE WE TO THE GODS THEY KILL US FOR THEIR SPORT"
+
+# `sg41.keyboard.Keyboard` can also encode numbers, despite the Schlusselgerat
+# 41 not having the ability to encrypt them directly.
+
+machine = SG41(PINS, POSITIONS)
+print(
+    machine.encrypt(Keyboard.encode("Schlusselgerat 41 Cipher Machine"))
+)  # "IHEPLQEDMYPWMCHMFRLHPZXNAAFSKDDAZXNW"
+
+machine = SG41(PINS, POSITIONS)
+print(
+    Keyboard.decode(machine.decrypt("IHEPLQEDMYPWMCHMFRLHPZXNAAFSKDDAZXNW"))
+)  # "SCHLUSSELGERAT 41 CIPHER MACHINE"
 ```
 
 ###### Cryptanalysis

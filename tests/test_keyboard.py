@@ -19,6 +19,16 @@ class TestKeyboard(unittest.TestCase):
         )
 
         self.assertEqual(
+            "SCHLUSSELGERATJJJRQ",
+            "".join(Keyboard.encode("Schlusselgerat 41")),
+        )
+
+        self.assertEqual(
+            "SCHLUSSELGERATJJJRQJJJCIPHERJMACHINE",
+            "".join(Keyboard.encode("Schlusselgerat 41 Cipher Machine")),
+        )
+
+        self.assertEqual(
             "IOLLYJIACKJANDJIOYFULJIILLJIUMPINGJDOWNJTHEJIAGGEDJHILL",
             "".join(
                 Keyboard.encode(
@@ -31,6 +41,16 @@ class TestKeyboard(unittest.TestCase):
         self.assertEqual(
             "SCHLUSSELGERAT FORTYONE",
             Keyboard.decode("SCHLUSSELGERATJFORTYONE"),
+        )
+
+        self.assertEqual(
+            "SCHLUSSELGERAT 41",
+            Keyboard.decode("SCHLUSSELGERATJJJRQ"),
+        )
+
+        self.assertEqual(
+            "SCHLUSSELGERAT 41 CIPHER MACHINE",
+            Keyboard.decode("SCHLUSSELGERATJJJRQJJJCIPHERJMACHINE"),
         )
 
         self.assertEqual(
