@@ -22,3 +22,7 @@ class Keyboard:
             for c in message.upper()
             if (c in SG41.CHARSET or c.isspace())
         ]
+
+    @staticmethod
+    def decode(message):
+        return message.replace("J", " ")

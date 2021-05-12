@@ -10,7 +10,7 @@ The Schlüsselgerät 41 was a mechanical cipher machine developed by Wanderer We
 
 Import the `SG41` class from the `sg41.machines` module, and pass the positions of the 144 cams and six rotors to its constructor.
 
-To perform an encryption or decryption operation, pass the relevant plaintext or ciphertext to the `.encrypt()` or `.decrypt()` methods, respectively. When encrypting, consider using `sg41.keyboard.Keyboard` to encode the plaintext into a compatible format.
+To perform an encryption or decryption operation, pass the text to the `.encrypt()` or `.decrypt()` method.
 
 ```python
 from sg41.machines import SG41
@@ -34,7 +34,7 @@ print(
 
 This example has been designed to match the example provided in the *Simulation* section of Kopacz & Reuvers' paper.
 
-If encrypting messages containing other characters, use the static `Keyboard.encode` method to preprocess your plaintext.
+When encrypting, consider using `sg41.keyboard.Keyboard` to encode the plaintext into a compatible format.
 
 ```python
 from sg41.machines import SG41
@@ -62,11 +62,11 @@ print(
 
 machine = SG41(PINS, POSITIONS)
 print(
-    machine.decrypt(
-        "UITVULSTGKFKUDNWALWILATPPKFIROGQGADNFWPDLBHDTGLXQZUORNQAQHLTOZLSFOCBXMJ"
-    ).replace(
-        "J", " "
-    )  # naive decode
+    Keyboard.decode(
+        machine.decrypt(
+            "UITVULSTGKFKUDNWALWILATPPKFIROGQGADNFWPDLBHDTGLXQZUORNQAQHLTOZLSFOCBXMJ"
+        )
+    )
 )  # AS FLIES TO WANTON BOYS ARE WE TO THE GODS THEY KILL US FOR THEIR SPORT
 ```
 

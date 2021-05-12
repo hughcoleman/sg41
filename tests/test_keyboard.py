@@ -28,4 +28,14 @@ class TestKeyboard(unittest.TestCase):
         )
 
     def test__decode(self):
-        pass
+        self.assertEqual(
+            "SCHLUSSELGERAT FORTYONE",
+            Keyboard.decode("SCHLUSSELGERATJFORTYONE"),
+        )
+
+        self.assertEqual(
+            "IOLLY IACK AND IOYFUL IILL IUMPING DOWN THE IAGGED HILL",
+            Keyboard.decode(
+                "IOLLYJIACKJANDJIOYFULJIILLJIUMPINGJDOWNJTHEJIAGGEDJHILL"
+            ),
+        )
